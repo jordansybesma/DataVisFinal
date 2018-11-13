@@ -7,3 +7,8 @@ Each row in the dataset represents an individual county in a specific year.
 * The CountyName column reports the county name and state
 * The FIPS column reports the county FIPS code
 * The Year column reports the year associated with the diabetes and income statistics
+
+### Links to examples:
+* http://bl.ocks.org/jadiehm/af4a00140c213dfbc4e6
+* https://beta.observablehq.com/@mbostock/d3-choropleth
+* http://synthesis.sbecker.net/articles/2012/07/18/learning-d3-part-7-choropleth-maps
