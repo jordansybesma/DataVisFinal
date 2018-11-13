@@ -16,7 +16,7 @@ if __name__ == '__main__':
 		for row in reader:
 			if row.get('FIPS', None) != None:
 				sheet[row['FIPS']] = {}
-				for i in range(2005, 2014):
+				for i in range(2004, 2014):
 					sheet[row['FIPS']][str(i)] = {}
 					sheet[row['FIPS']][str(i)]['DiabetesPercent'] = row[str(i)]
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 		reader = csv.DictReader(data)
 		for row in reader:
 			if 'Per capita' in row['Description'] and sheet.get(row['FIPS'], None) != None:
-				for i in range(2005, 2014):
+				for i in range(2004, 2014):
 					sheet[row['FIPS']][str(i)].update({'CountyName':row['GeoName'], 'FIPS':row['FIPS'], 'Year':str(i), 'PersonalIncome':row[str(i)]})
 
 	with open('output.csv', 'w+', newline='') as out:
