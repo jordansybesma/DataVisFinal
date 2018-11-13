@@ -12,3 +12,6 @@ Each row in the dataset represents an individual county in a specific year.
 * http://bl.ocks.org/jadiehm/af4a00140c213dfbc4e6
 * https://beta.observablehq.com/@mbostock/d3-choropleth
 * http://synthesis.sbecker.net/articles/2012/07/18/learning-d3-part-7-choropleth-maps
+* http://tipstrategies.com/geography-of-jobs/
+* http://rmaps.github.io/blog/posts/animated-choropleths/
+* http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
