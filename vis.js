@@ -16,14 +16,16 @@ const colorMap = [
 	['#88bbc8','#7e9eba','#7f7fa0','#7e627c','#734853'],
 	['#64acbe','#698eac','#6e718e','#69576b','#574249'],
 ]
+// This particular color scale was inspired by http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
+// and was fleshed out using https://learnui.design/tools/data-color-picker.html#palette
 
 // Maps values to buckets based on established thresholds
 function color(diabetes, income) {
-	for (let i = 0; i < 5; i++) {
+	for (let i = 1; i < 6; i++) {
 		if (income <= incomeThresholds[i]) {
-			for (let j = 0; j < 5; j++) {
+			for (let j = 1; j < 6; j++) {
 				if (diabetes <= diabetesThresholds[j]) {
-					return colorMap[i][j];
+					return colorMap[i-1][j-1];
 				}
 			}
 		}
@@ -82,10 +84,11 @@ function render(error, us, data) {
 	diabetes.sort(d3.ascending)
 	income.sort(d3.ascending)
 	// calculate 20q, 40q, 60q, 80q, max for both variables
-	diabetesThresholds = [d3.quantile(diabetes, 0.2), d3.quantile(diabetes, 0.4), d3.quantile(diabetes, 0.6), 
+	diabetesThresholds = [d3.quantile(diabetes, 0), d3.quantile(diabetes, 0.2), d3.quantile(diabetes, 0.4), d3.quantile(diabetes, 0.6), 
 						d3.quantile(diabetes, 0.8), d3.quantile(diabetes, 1)];
-	incomeThresholds = [d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6), 
+	incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6), 
 						d3.quantile(income, 0.8), d3.quantile(income, 1)];
+
 	console.log(diabetesThresholds)
 	console.log(incomeThresholds)
 	// Draw counties
@@ -159,7 +162,7 @@ function render(error, us, data) {
 					div.transition().duration(300)
 						.style("opacity", 0.8)
 				
-					div.text(`Diabetes Prevalence: <= ${diabetesThresholds[i]}%, Mean Personal Income: <= $${incomeThresholds[j]}`)
+					div.text(`Diabetes Prevalence: (${diabetesThresholds[i]}% - ${diabetesThresholds[i+1]}%); Mean Personal Income: ($${incomeThresholds[j]} - $${incomeThresholds[j + 1]})`)
 						.style("left", (d3.event.pageX) + "px")
 						.style("top", (d3.event.pageY -30) + "px");
 				})
