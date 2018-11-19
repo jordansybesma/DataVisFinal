@@ -20,7 +20,8 @@ const colorMap = [
     ['#a9cad3','#93adc8','#928db2','#976c8c','#904e59'],
     ['#88bbc8','#7e9eba','#7f7fa0','#7e627c','#734853'],
     ['#64acbe','#698eac','#6e718e','#69576b','#574249'],
-]
+];
+
 // Defines the texture that we'll add to the counties with no data
 const texture = textures.lines()
     .orientation("diagonal")
@@ -67,10 +68,9 @@ const key = d3.select('body').append('svg:svg')
       .attr('width', width / 3)
       .attr('height', height)
       .append('g')
-      //.attr("transform", "translate(" + width + ",0)");
 
-const path = d3.geo.path()
-const g = svg.append("g")
+const path = d3.geo.path();
+const g = svg.append("g");
 
 queue()
     .defer(d3.json, "usCounties.json")
@@ -78,8 +78,8 @@ queue()
     .await(render);
 
 function render(error, us, data) {
-    diabetes = []
-    income = []
+    diabetes = [];
+    income = [];
     // Populate lookup table, analysis arrays
     data.forEach(function(d) {
         if (lookup[d.Year] == null) {
@@ -93,9 +93,9 @@ function render(error, us, data) {
         }
         lookup[d.Year][d.FIPS] = {'diabetes':parseFloat(d.DiabetesPercent), 'name':d.CountyName, 'income':parseInt(d.PersonalIncome)};
     });
-    diabetes.sort(d3.ascending)
-    income.sort(d3.ascending)
-    // calculate 20q, 40q, 60q, 80q, max for both variables
+    diabetes.sort(d3.ascending);
+    income.sort(d3.ascending);
+    // Calculate 20q, 40q, 60q, 80q, max for both variables
     diabetesThresholds = [d3.quantile(diabetes, 0), d3.quantile(diabetes, 0.2), d3.quantile(diabetes, 0.4), d3.quantile(diabetes, 0.6),
         d3.quantile(diabetes, 0.8), d3.quantile(diabetes, 1)];
     incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6),
@@ -174,7 +174,7 @@ function render(error, us, data) {
                         .style({'opacity': 1, 'stroke': 'black', 'stroke-width': 1.5});
 
                     div.transition().duration(300)
-                        .style("opacity", 0.8)
+                        .style("opacity", 0.8);
 
                     div.text(`Diabetes Prevalence: (${diabetesThresholds[i]}% - ${diabetesThresholds[i+1]}%); Mean Personal Income: ($${incomeThresholds[j]} - $${incomeThresholds[j + 1]})`)
                         .style("left", (d3.event.pageX) + "px")
@@ -202,52 +202,52 @@ function render(error, us, data) {
         .attr("x", 100)
         .attr("y", (height / 2) - (5 * squareSize / 2) + 5)
         .attr('text-anchor', 'middle')
-        .text('Less Diabetes,')
+        .text('Less Diabetes,');
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100)
         .attr("y", (height / 2) - (5 * squareSize / 2) + 18)
         .attr('text-anchor', 'middle')
-        .text('Lower Income')
+        .text('Lower Income');
 
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) - (5 * squareSize / 2) + 5)
         .attr('text-anchor', 'middle')
-        .text('More Diabetes,')
+        .text('More Diabetes,');
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) - (5 * squareSize / 2) + 18)
         .attr('text-anchor', 'middle')
-        .text('Lower Income')
+        .text('Lower Income');
 
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100)
         .attr("y", (height / 2) + 2.5 * squareSize + 40)
         .attr('text-anchor', 'middle')
-        .text('Less Diabetes,')
+        .text('Less Diabetes,');
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100)
         .attr("y", (height / 2) + 2.5 * squareSize + 53)
         .attr('text-anchor', 'middle')
-        .text('Higher Income')
+        .text('Higher Income');
 
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) + 2.5 * squareSize + 40)
         .attr('text-anchor', 'middle')
-        .text('More Diabetes,')
+        .text('More Diabetes,');
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) + 2.5 * squareSize + 53)
         .attr('text-anchor', 'middle')
-        .text('Higher Income')
+        .text('Higher Income');
 
     // Creates legend for counties with no data
     key.append("rect")
@@ -255,7 +255,7 @@ function render(error, us, data) {
         .attr("y", (height / 2) + 150)
         .attr("width", squareSize)
         .attr("height", squareSize)
-        .attr("fill", textureForLegend.url())
+        .attr("fill", textureForLegend.url());
 
     // Labels the legend associated with counties with no data
     key.append("text")
@@ -264,11 +264,12 @@ function render(error, us, data) {
         .attr("y", (height / 2) + 170)
         .attr('text-anchor', 'left')
         .text('= No Data Available')
-        .style("font-weight", 5)
+        .style("font-weight", 5);
 
     // Creates the texture associated with the counties with no data
     g.call(texture);
     g.call(textureForLegend);
+
 
     // Everything involving populating the map with data happens inside of this update function
     // It is called at start up and every time that the year is updated
@@ -295,6 +296,7 @@ function render(error, us, data) {
             .enter().append("path")
             .attr("d", path)
             .style("fill", function (d) {
+
                 // If we don't have data for this county, return some default value.
                 if (!lookup[currentYear][d.id] || !lookup[currentYear][d.id].diabetes || !lookup[currentYear][d.id].income) {
                     return texture.url();
@@ -305,10 +307,15 @@ function render(error, us, data) {
                 if (plotDiabetes && !plotIncome){
                   return color(lookup[currentYear][d.id].diabetes, 0);
                 }
-                return color(lookup[currentYear][d.id].diabetes, lookup[currentYear][d.id].income);
+                if (lookup[currentYear][d.id] && lookup[currentYear][d.id].diabetes && lookup[currentYear][d.id].income){
+                    return color(lookup[currentYear][d.id].diabetes, lookup[currentYear][d.id].income)};
             })
             .style("opacity", 1)
+
+            // Zooms in on click
             .on("click", clicked)
+
+            // Hovers over counties and displays relevant information
             .on("mouseover", function(d) {
                 var sel = d3.select(this);
                 sel.moveToFront();
@@ -336,7 +343,7 @@ function render(error, us, data) {
                 div.transition()
                     .duration(300)
                     .style("opacity", 0);
-            })
+            });
 
         // Draw state outlines
         g.append("path")
@@ -372,9 +379,7 @@ function render(error, us, data) {
             .style("stroke-width", 1.5 / k + "px");
     }
 
-
-    update() // Call update initially so it can create the initial plot (year 2004)
-
+    update(); // Calls update initially so it can create the initial plot (year 2004)
 
     // Creates a slider to show each data frame by year, and animate with play button
     d3.select("#slider")
@@ -388,6 +393,7 @@ function render(error, us, data) {
                 var newYear = date.getFullYear();
                 if (newYear !== currentYear) {
                     currentYear = newYear;
+                    g.selectAll(".county").remove();
                     update();
                 }
             })
@@ -395,4 +401,4 @@ function render(error, us, data) {
                 .playbackRate(0.5)
                 .loop(false)
         );
-};
+}
