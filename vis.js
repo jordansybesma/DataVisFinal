@@ -69,11 +69,65 @@ function render(error, us, data) {
 	diabetes.sort(d3.ascending)
 	income.sort(d3.ascending)
 	// calculate 20q, 40q, 60q, 80q, max for both variables
-	diabetesThresholds = [d3.quantile(diabetes, 0), d3.quantile(diabetes, 0.2), d3.quantile(diabetes, 0.4), d3.quantile(diabetes, 0.6), 
+	diabetesThresholds = [d3.quantile(diabetes, 0), d3.quantile(diabetes, 0.2), d3.quantile(diabetes, 0.4), d3.quantile(diabetes, 0.6),
 						d3.quantile(diabetes, 0.8), d3.quantile(diabetes, 1)];
-	incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6), 
+	incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6),
 						d3.quantile(income, 0.8), d3.quantile(income, 1)];
 
+<<<<<<< HEAD
+=======
+	console.log(diabetesThresholds)
+	console.log(incomeThresholds)
+	// Draw counties
+	svg.append("g")
+		.attr("class", "county")
+		.selectAll("path")
+		.data(topojson.feature(us, us.objects.counties).features)
+		.enter().append("path")
+		.attr("d", path)
+		.style("fill", function (d) {
+			// If we don't have data for this county, return some default value.
+			if (!lookup[year][d.id] || !lookup[year][d.id].diabetes || !lookup[year][d.id].income) {
+				return color(0);
+			}
+			return color(lookup[year][d.id].diabetes, lookup[year][d.id].income);
+		})
+		.style("opacity", 1)
+		.on("mouseover", function(d) {
+			var sel = d3.select(this);
+			sel.moveToFront();
+		 	d3.select(this)
+		 		.transition()
+		 		.duration(300)
+		 		.style({'opacity': 1, 'stroke': 'black', 'stroke-width': 1.5});
+
+			div.transition().duration(300)
+				.style("opacity", 0.8)
+
+			div.text(`${lookup[year][d.id]['name']} - Diabetes Prevalence: ${lookup[year][d.id]['diabetes']}%, Mean Personal Income: $${lookup[year][d.id]['income']}`)
+				.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY -30) + "px");
+		})
+		.on("mouseout", function() {
+			var sel = d3.select(this);
+			sel.moveToBack();
+
+			d3.select(this)
+				.transition()
+				.duration(300)
+				.style({'opacity': 1, 'stroke': 'white', 'stroke-width': 0});
+
+			div.transition()
+				.duration(300)
+				.style("opacity", 0);
+		})
+
+	// Draw state outlines
+	svg.append("path")
+    	.datum(topojson.mesh(us, us.objects.states, function(a, b) { return a.id !== b.id; }))
+    	.attr("class", "state")
+    	.attr("d", path);
+>>>>>>> bf762d45212c89354c2c3a994351d4f102169535
 
     // Draw key
     const squareSize = 30
@@ -95,7 +149,7 @@ function render(error, us, data) {
 
 					div.transition().duration(300)
 						.style("opacity", 0.8)
-				
+
 					div.text(`Diabetes Prevalence: (${diabetesThresholds[i]}% - ${diabetesThresholds[i+1]}%); Mean Personal Income: ($${incomeThresholds[j]} - $${incomeThresholds[j + 1]})`)
 						.style("left", (d3.event.pageX) + "px")
 						.style("top", (d3.event.pageY -30) + "px");
@@ -108,7 +162,7 @@ function render(error, us, data) {
 						.transition()
 						.duration(300)
 						.style({'opacity': 1, 'stroke': 'white', 'stroke-width': 0});
-				
+
 					div.transition()
 						.duration(300)
 						.style("opacity", 0);
@@ -182,14 +236,22 @@ function render(error, us, data) {
             .attr("d", path);
     }
 
+<<<<<<< HEAD
     update() // Call update initially so it can create the initial plot (year 2003)
 
 	// Creates a slider to show each data frame by year, and animate with play button
+=======
+    //Create the slider
+>>>>>>> bf762d45212c89354c2c3a994351d4f102169535
     d3.select("#slider")
         .call(
             chroniton()
                 .domain([new Date(2004, 1, 1), new Date(2013, 1, 1)])
                 .labelFormat(function(date) {
+<<<<<<< HEAD
+=======
+                    //return Math.ceil((date.getFullYear()) / 10) * 10;
+>>>>>>> bf762d45212c89354c2c3a994351d4f102169535
                     return date.getFullYear();
                 })
                 .width(600).on('change', function(date) {
