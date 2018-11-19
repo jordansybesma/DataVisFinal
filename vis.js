@@ -96,9 +96,9 @@ function render(error, us, data) {
 	diabetes.sort(d3.ascending)
 	income.sort(d3.ascending)
 	// calculate 20q, 40q, 60q, 80q, max for both variables
-	diabetesThresholds = [d3.quantile(diabetes, 0), d3.quantile(diabetes, 0.2), d3.quantile(diabetes, 0.4), d3.quantile(diabetes, 0.6), 
+	diabetesThresholds = [d3.quantile(diabetes, 0), d3.quantile(diabetes, 0.2), d3.quantile(diabetes, 0.4), d3.quantile(diabetes, 0.6),
 						d3.quantile(diabetes, 0.8), d3.quantile(diabetes, 1)];
-	incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6), 
+	incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6),
 						d3.quantile(income, 0.8), d3.quantile(income, 1)];
 
 	console.log(diabetesThresholds)
@@ -128,7 +128,7 @@ function render(error, us, data) {
 
 			div.transition().duration(300)
 				.style("opacity", 0.8)
-		
+
 			div.text(`${lookup[year][d.id]['name']} - Diabetes Prevalence: ${lookup[year][d.id]['diabetes']}%, Mean Personal Income: $${lookup[year][d.id]['income']}`)
 				.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY -30) + "px");
@@ -141,7 +141,7 @@ function render(error, us, data) {
 				.transition()
 				.duration(300)
 				.style({'opacity': 1, 'stroke': 'white', 'stroke-width': 0});
-		
+
 			div.transition()
 				.duration(300)
 				.style("opacity", 0);
@@ -173,7 +173,7 @@ function render(error, us, data) {
 
 					div.transition().duration(300)
 						.style("opacity", 0.8)
-				
+
 					div.text(`Diabetes Prevalence: (${diabetesThresholds[i]}% - ${diabetesThresholds[i+1]}%); Mean Personal Income: ($${incomeThresholds[j]} - $${incomeThresholds[j + 1]})`)
 						.style("left", (d3.event.pageX) + "px")
 						.style("top", (d3.event.pageY -30) + "px");
@@ -186,7 +186,7 @@ function render(error, us, data) {
 						.transition()
 						.duration(300)
 						.style({'opacity': 1, 'stroke': 'white', 'stroke-width': 0});
-				
+
 					div.transition()
 						.duration(300)
 						.style("opacity", 0);
@@ -254,12 +254,14 @@ function render(error, us, data) {
             })
     }
 
+    //Create the slider
     d3.select("#slider")
         .call(
             chroniton()
                 .domain([new Date(2004, 1, 1), new Date(2013, 1, 1)])
                 .labelFormat(function(date) {
-                    return Math.ceil((date.getFullYear()) / 10) * 10;
+                    //return Math.ceil((date.getFullYear()) / 10) * 10;
+                    return date.getFullYear();
                 })
                 .width(600).on('change', function(date) {
                 var newYear = Math.ceil((date.getFullYear()) / 10) * 10;
@@ -271,7 +273,7 @@ function render(error, us, data) {
             })
                 .playButton(true) // (6)
                 .playbackRate(0.5)
-                .loop(true)
+                .loop(false)
         );
 
 
