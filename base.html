@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Diabetes per County</title>
+		<title>Visualization</title>
 		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 		<script type="text/javascript" src="http://d3js.org/queue.v1.min.js"></script>
 		<script type="text/javascript" src="http://d3js.org/topojson.v1.min.js"></script>
@@ -20,9 +20,14 @@
 		 	font-family: sans-serif;
 		}
 
-		.label {
+		.key {
 			font: 11px sans-serif;
 			font-weight: bold;
+		}
+
+		.summary {
+			font: 13px sans-serif;
+			width: 900px;
 		}
 
 		.county {
@@ -36,10 +41,15 @@
 		  stroke-linejoin: round;
 		  stroke-width: 2px;
 		}
+
 		#slider {
 			position: relative;
 			margin-left: 150px;
-			bottom: 70px;
+			bottom: -15px;
+		}
+
+		svg {
+			display: inline;
 		}
 
 		div.tooltip {
@@ -66,12 +76,14 @@
 	</style>
 
 	<body>
-		<h1>Diabetes and Personal Income in the United States</h1>
+		<h2>Diabetes Prevalance and Income per Capita in the United States, 2004-2013</h2>
 		<script type="text/javascript" src="vis.js"></script>
 		<div id="slider"></div>
-		<p style="font-size:12px">The color map shows which quantile each county belongs to in terms of income and diabetes. Income is inflation adjusted.</p>
-		<p>Sources: <a href='https://www.cdc.gov/diabetes/data/countydata/countydataindicators.html'>CDC county-level diabetes dataset</a>, <a href='https://apps.bea.gov/regional/histdata/'>U.S. Dept. of Commerce historical data</a></p>
-
-
+		<br/>
+		<p class='summary'>
+			This bivariate map displays personal income per capita (in 2013 dollars) and the prevalance of diagnosed diabetes on a county level. Each color corresponds to counties that fit within a percentile range for either statistic across the 2004-2013 period, where grey represents the lowest 20% of counties in either category, bright blue represents counties in the top 20% of income,
+			and bright red represents counties in the top 20% of diabetes prevalance.
+		</p>
+		<p class='summary'>Sources: <a href='https://www.cdc.gov/diabetes/data/countydata/countydataindicators.html'>CDC county-level diabetes dataset</a>, <a href='https://apps.bea.gov/regional/histdata/'>U.S. Dept. of Commerce historical data</a></p>
 	</body>
 </html>

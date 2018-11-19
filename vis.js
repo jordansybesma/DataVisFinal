@@ -1,7 +1,7 @@
 // County map rendering based on http://bl.ocks.org/jadiehm/af4a00140c213dfbc4e6
 
 const width            = 900;
-const height           = 600;
+const height           = 500;
 let centered;
 let currentYear        = 2004; // Sets which year we're currently examining
 let diabetesThresholds = []; // Stores quantiles for diabetes
@@ -84,30 +84,33 @@ function render(error, us, data) {
     incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6),
         d3.quantile(income, 0.8), d3.quantile(income, 1)];
 
-        //Add checkboxes
-        key.append("foreignObject")
-            .attr("width", 100)
-            .attr("height", 100)
-            .attr("x", 100)
-            .attr("y", (height / 2)-200)
-            .append("xhtml:body")
-            .html("<form><input type=checkbox id=check checked/>Diabetes</form>")
-            .on("change", function(d, i){
-                plotDiabetes = !plotDiabetes;
-                update();
-            });
+    //Add checkboxes
+    key.append("foreignObject")
+        .attr("width", 100)
+        .attr("height", 10)
+        .attr("x", 50)
+        .attr("y", (height / 2)-160)
+        .append("xhtml:body")
+        .attr("class", "key")
+        .html("<form><input type=checkbox id=check checked/>Diabetes</form>")
+        .on("change", function(d, i){
+            plotDiabetes = !plotDiabetes;
+            update();
+        });
 
-            key.append("foreignObject")
-                .attr("width", 100)
-                .attr("height", 100)
-                .attr("x", 100)
-                .attr("y", (height / 2)-170)
-                .append("xhtml:body")
-                .html("<form><input type=checkbox id=check checked/>Income</form>")
-                .on("change", function(d, i){
-                    plotIncome = !plotIncome;
-                    update();
-                });
+    key.append("foreignObject")
+        .attr("width", 100)
+        .attr("height", 10)
+        .attr("x", 50)
+        .attr("y", (height / 2)-140)
+        .append("xhtml:body")
+        .html("<form><input type=checkbox id=check checked/>Income</form>")
+        .attr("class", "key")
+        .on("change", function(d, i){
+            plotIncome = !plotIncome;
+            update();
+        });
+
     // Draw key
     const squareSize = 30
     for (let i = 0; i < colorMap.length; i++) {
@@ -152,52 +155,52 @@ function render(error, us, data) {
 
     // Draw legend labels
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100)
         .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
         .attr('text-anchor', 'middle')
         .text('Less Diabetes,')
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100)
         .attr("y", (height / 2) - (5 * squareSize / 2) -5)
         .attr('text-anchor', 'middle')
         .text('Lower Income')
 
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
         .attr('text-anchor', 'middle')
         .text('More Diabetes,')
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) - (5 * squareSize / 2) -5)
         .attr('text-anchor', 'middle')
         .text('Lower Income')
 
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100)
         .attr("y", (height / 2) + 2.5 * squareSize + 15)
         .attr('text-anchor', 'middle')
         .text('Less Diabetes,')
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100)
         .attr("y", (height / 2) + 2.5 * squareSize + 25)
         .attr('text-anchor', 'middle')
         .text('Higher Income')
 
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) + 2.5 * squareSize + 15)
         .attr('text-anchor', 'middle')
         .text('More Diabetes,')
     key.append("text")
-        .attr('class', 'label')
+        .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
         .attr("y", (height / 2) + 2.5 * squareSize + 25)
         .attr('text-anchor', 'middle')
