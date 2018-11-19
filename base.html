@@ -6,6 +6,8 @@
 		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 		<script type="text/javascript" src="http://d3js.org/queue.v1.min.js"></script>
 		<script type="text/javascript" src="http://d3js.org/topojson.v1.min.js"></script>
+		<script type="text/javascript" src="chroniton.js"></script>
+		<link href="chroniton.css" rel="stylesheet">
 	</head>
 	<style>
 
@@ -34,6 +36,14 @@
 		  stroke-linejoin: round;
 		  stroke-width: 2px;
 		}
+		.slider {
+			position: absolute;
+			left: 50%;
+			margin-left: -300px;
+			bottom: 20px;
+			width: 600px;
+			height: 50px;
+		}
 
 		div.tooltip {
 		 	position: absolute;
@@ -48,15 +58,23 @@
 	 		border-radius: 15px;
 		}
 
+
 		@media (max-width: 400px) {
 	    .d3map {
 	        display: none;
 	    }
+
+
 	}
 	</style>
+
 	<body>
 		<h1>Diabetes and Personal Income in the United States</h1>
+		<!--<button id="play">play</button>-->
+		<!--<span id="clock">year</span>-->
+
 		<script type="text/javascript" src="vis.js"></script>
+		<div id="slider"></div>
 		<p>Sources: <a href='https://www.cdc.gov/diabetes/data/countydata/countydataindicators.html'>CDC county-level diabetes dataset</a>, <a href='https://apps.bea.gov/regional/histdata/'>U.S. Dept. of Commerce historical data</a></p>
 	</body>
 </html>

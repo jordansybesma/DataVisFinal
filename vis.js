@@ -3,8 +3,15 @@
 const width            = 1200;
 const height           = 600;
 let year               = 2004; // Sets which year we're currently examining
+const currentAttribute = 0;
+// let currentYear = 2003;
 let diabetesThresholds = []; // Stores quantiles for diabetes
 let incomeThresholds   = []; // Stores quantiles for income
+var svgStates = d3.select("svg #states"),
+    // svgBoundary = d3.select("svg #boundary"),
+    states = {},
+    startYear = 2003,
+    currentYear = startYear;
 
 // colorMap stores the two-dimensional color matrix.
 // The physical position of the hex in the array matches the
@@ -16,6 +23,8 @@ const colorMap = [
 	['#88bbc8','#7e9eba','#7f7fa0','#7e627c','#734853'],
 	['#64acbe','#698eac','#6e718e','#69576b','#574249'],
 ]
+
+
 // This particular color scale was inspired by http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
 // and was fleshed out using https://learnui.design/tools/data-color-picker.html#palette
 
@@ -49,6 +58,7 @@ queue()
 	.defer(d3.csv, "data.csv")
 	.await(render);
 
+
 function render(error, us, data) {
 	d3.selection.prototype.moveToFront = function() {
 		return this.each(function() {
@@ -64,6 +74,8 @@ function render(error, us, data) {
 			}
 		});
 	};
+
+	// d3.slider()
 
 	lookup = {}
 	diabetes = []
@@ -182,6 +194,88 @@ function render(error, us, data) {
     	}
     }
 
+    function update() {
+        d3.selection.prototype.moveToFront = function() {
+            return this.each(function() {
+                this.parentNode.appendChild(this);
+            });
+        };
+
+        d3.selection.prototype.moveToBack = function() {
+            return this.each(function() {
+                var firstChild = this.parentNode.firstChild;
+                if (firstChild) {
+                    this.parentNode.insertBefore(this, firstChild);
+                }
+            });
+        };
+
+        svg.append("g")
+            .attr("class", "county")
+            .selectAll("path")
+            .data(topojson.feature(us, us.objects.counties).features)
+            .enter().append("path")
+            .attr("d", path)
+            .style("fill", function (d) {
+                // If we don't have data for this county, return some default value.
+                if (!lookup[year][d.id] || !lookup[year][d.id].diabetes || !lookup[year][d.id].income) {
+                    return color(0);
+                }
+                return color(lookup[year][d.id].diabetes, lookup[year][d.id].income);
+            })
+            .style("opacity", 1)
+            .on("mouseover", function(d) {
+                var sel = d3.select(this);
+                sel.moveToFront();
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style({'opacity': 1, 'stroke': 'black', 'stroke-width': 1.5});
+
+                div.transition().duration(300)
+                    .style("opacity", 0.8)
+
+                div.text(`${lookup[year][d.id]['name']} - Diabetes Prevalence: ${lookup[year][d.id]['diabetes']}%, Mean Personal Income: $${lookup[year][d.id]['income']}`)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY -30) + "px");
+            })
+            .on("mouseout", function() {
+                var sel = d3.select(this);
+                sel.moveToBack();
+
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style({'opacity': 1, 'stroke': 'white', 'stroke-width': 0});
+
+                div.transition()
+                    .duration(300)
+                    .style("opacity", 0);
+            })
+    }
+
+    d3.select("#slider")
+        .call(
+            chroniton()
+                .domain([new Date(2004, 1, 1), new Date(2013, 1, 1)])
+                .labelFormat(function(date) {
+                    return Math.ceil((date.getFullYear()) / 10) * 10;
+                })
+                .width(600).on('change', function(date) {
+                var newYear = Math.ceil((date.getFullYear()) / 10) * 10;
+                if (newYear !== currentYear) {
+                    currentYear = newYear;
+                    svgStates.selectAll("path").remove();
+                    update();
+                }
+            })
+                .playButton(true) // (6)
+                .playbackRate(0.5)
+                .loop(true)
+        );
+
+
+
     // Draw legend labels
     svg.append("text")
     	.attr('class', 'label')
@@ -234,6 +328,7 @@ function render(error, us, data) {
     	.attr("y", (height / 2) + 2.5 * squareSize + 25)
     	.attr('text-anchor', 'middle')
     	.text('Higher Income')
+
 
 
 };
