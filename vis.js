@@ -2,6 +2,7 @@
 
 const width            = 1200;
 const height           = 600;
+let centered;
 let currentYear        = 2004; // Sets which year we're currently examining
 let diabetesThresholds = []; // Stores quantiles for diabetes
 let incomeThresholds   = []; // Stores quantiles for income
@@ -30,7 +31,7 @@ function color(diabetes, income) {
             }
         }
     }
-    return '#000000' // data doesn't exist or something messed up.
+    return 	'#FAEBD7' // data doesn't exist or something messed up.
 }
 
 const div = d3.select("body").append("div")
@@ -43,6 +44,7 @@ const svg = d3.select("body").append("svg")
     .style("margin", "-15px auto");
 
 const path = d3.geo.path()
+const g = svg.append("g")
 
 queue()
     .defer(d3.json, "usCounties.json")
@@ -85,6 +87,7 @@ function render(error, us, data) {
                 .attr("width", squareSize)
                 .attr("height", squareSize)
                 .attr("fill", colorMap[j][i])
+
                 .on("mouseover", function(d) {
                     var sel = d3.select(this);
                     sel.moveToFront();
@@ -132,7 +135,7 @@ function render(error, us, data) {
             });
         };
 
-        svg.append("g")
+        g.append("g")
             .attr("class", "county")
             .selectAll("path")
             .data(topojson.feature(us, us.objects.counties).features)
@@ -146,6 +149,7 @@ function render(error, us, data) {
                 return color(lookup[currentYear][d.id].diabetes, lookup[currentYear][d.id].income);
             })
             .style("opacity", 1)
+            .on("click", clicked)
             .on("mouseover", function(d) {
                 var sel = d3.select(this);
                 sel.moveToFront();
@@ -176,11 +180,37 @@ function render(error, us, data) {
             })
 
         // Draw state outlines
-        svg.append("path")
+        g.append("path")
             .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a.id !== b.id; }))
             .attr("class", "state")
             .attr("d", path);
     }
+
+    function clicked(d) {
+        var x, y, k;
+
+        if (d && centered !== d) {
+            var centroid = path.centroid(d);
+            x = centroid[0];
+            y = centroid[1];
+            k = 4;
+            centered = d;
+        } else {
+            x = width / 2;
+            y = height / 2;
+            k = 1;
+            centered = null;
+        }
+
+        g.selectAll("path")
+            .classed("active", centered && function(d) { return d === centered; });
+
+        g.transition()
+            .duration(750)
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+            .style("stroke-width", 1.5 / k + "px");
+    }
+
 
     update() // Call update initially so it can create the initial plot (year 2003)
 
@@ -196,7 +226,7 @@ function render(error, us, data) {
                 var newYear = date.getFullYear();
                 if (newYear !== currentYear) {
                     currentYear = newYear;
-                    svg.selectAll("path").remove();
+                    g.selectAll("path").remove();
                     update();
                 }
             })
