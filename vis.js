@@ -1,11 +1,12 @@
 // County map rendering based on http://bl.ocks.org/jadiehm/af4a00140c213dfbc4e6
 
-const width            = 1200;
+const width            = 900;
 const height           = 600;
 let centered;
 let currentYear        = 2004; // Sets which year we're currently examining
 let diabetesThresholds = []; // Stores quantiles for diabetes
 let incomeThresholds   = []; // Stores quantiles for income
+let lookup = {}
 
 // colorMap stores the two-dimensional color matrix.
 // The physical position of the hex in the array matches the
@@ -38,10 +39,16 @@ const div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-const svg = d3.select("body").append("svg")
+const svg = d3.select("body").append("svg:svg")
     .attr("width", width)
     .attr("height", height)
     .style("margin", "-15px auto");
+
+const key = d3.select('body').append('svg:svg')
+      .attr('width', width / 3)
+      .attr('height', height)
+      .append('g')
+      //.attr("transform", "translate(" + width + ",0)");
 
 const path = d3.geo.path()
 const g = svg.append("g")
@@ -52,7 +59,6 @@ queue()
     .await(render);
 
 function render(error, us, data) {
-    lookup = {}
     diabetes = []
     income = []
     // Populate lookup table, analysis arrays
@@ -76,13 +82,12 @@ function render(error, us, data) {
     incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6),
         d3.quantile(income, 0.8), d3.quantile(income, 1)];
 
-
     // Draw key
     const squareSize = 30
     for (let i = 0; i < colorMap.length; i++) {
         for (let j = 0; j < colorMap[i].length; j++) {
-            svg.append("rect")
-                .attr("x", (width - 250) + squareSize*i)
+            key.append("rect")
+                .attr("x", 100 + squareSize*i)
                 .attr("y", (height / 2) - (5 * squareSize / 2) + squareSize*j)
                 .attr("width", squareSize)
                 .attr("height", squareSize)
@@ -118,6 +123,59 @@ function render(error, us, data) {
                 })
         }
     }
+
+    // Draw legend labels
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100)
+        .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
+        .attr('text-anchor', 'middle')
+        .text('Less Diabetes,')
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100)
+        .attr("y", (height / 2) - (5 * squareSize / 2) -5)
+        .attr('text-anchor', 'middle')
+        .text('Lower Income')
+
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100 + squareSize * 5)
+        .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
+        .attr('text-anchor', 'middle')
+        .text('More Diabetes,')
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100 + squareSize * 5)
+        .attr("y", (height / 2) - (5 * squareSize / 2) -5)
+        .attr('text-anchor', 'middle')
+        .text('Lower Income')
+
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100)
+        .attr("y", (height / 2) + 2.5 * squareSize + 15)
+        .attr('text-anchor', 'middle')
+        .text('Less Diabetes,')
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100)
+        .attr("y", (height / 2) + 2.5 * squareSize + 25)
+        .attr('text-anchor', 'middle')
+        .text('Higher Income')
+
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100 + squareSize * 5)
+        .attr("y", (height / 2) + 2.5 * squareSize + 15)
+        .attr('text-anchor', 'middle')
+        .text('More Diabetes,')
+    key.append("text")
+        .attr('class', 'label')
+        .attr("x", 100 + squareSize * 5)
+        .attr("y", (height / 2) + 2.5 * squareSize + 25)
+        .attr('text-anchor', 'middle')
+        .text('Higher Income')
 
     function update() {
         d3.selection.prototype.moveToFront = function() {
@@ -234,60 +292,4 @@ function render(error, us, data) {
                 .playbackRate(0.5)
                 .loop(false)
         );
-
-    // Draw legend labels
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250)
-        .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
-        .attr('text-anchor', 'middle')
-        .text('Less Diabetes,')
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250)
-        .attr("y", (height / 2) - (5 * squareSize / 2) -5)
-        .attr('text-anchor', 'middle')
-        .text('Lower Income')
-
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250 + squareSize * 5)
-        .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
-        .attr('text-anchor', 'middle')
-        .text('More Diabetes,')
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250 + squareSize * 5)
-        .attr("y", (height / 2) - (5 * squareSize / 2) -5)
-        .attr('text-anchor', 'middle')
-        .text('Lower Income')
-
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250)
-        .attr("y", (height / 2) + 2.5 * squareSize + 15)
-        .attr('text-anchor', 'middle')
-        .text('Less Diabetes,')
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250)
-        .attr("y", (height / 2) + 2.5 * squareSize + 25)
-        .attr('text-anchor', 'middle')
-        .text('Higher Income')
-
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250 + squareSize * 5)
-        .attr("y", (height / 2) + 2.5 * squareSize + 15)
-        .attr('text-anchor', 'middle')
-        .text('More Diabetes,')
-    svg.append("text")
-        .attr('class', 'label')
-        .attr("x", width - 250 + squareSize * 5)
-        .attr("y", (height / 2) + 2.5 * squareSize + 25)
-        .attr('text-anchor', 'middle')
-        .text('Higher Income')
-
-
-
 };
