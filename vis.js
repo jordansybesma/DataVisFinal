@@ -307,7 +307,7 @@ function render(error, us, data) {
                 if (plotDiabetes && !plotIncome){
                   return color(lookup[currentYear][d.id].diabetes, 0);
                 }
-                if (lookup[currentYear][d.id] && lookup[currentYear][d.id].diabetes && lookup[currentYear][d.id].income){
+                else {
                     return color(lookup[currentYear][d.id].diabetes, lookup[currentYear][d.id].income)};
             })
             .style("opacity", 1)
@@ -325,11 +325,17 @@ function render(error, us, data) {
                     .style({'opacity': 1, 'stroke': 'black', 'stroke-width': 1.5});
 
                 div.transition().duration(300)
-                    .style("opacity", 0.8)
+                    .style("opacity", 0.8);
 
-                div.text(`${lookup[currentYear][d.id]['name']} - Diabetes Prevalence: ${lookup[currentYear][d.id]['diabetes']}%, Mean Personal Income: $${lookup[currentYear][d.id]['income']}`)
-                    .style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY -30) + "px");
+                if (!lookup[currentYear][d.id] || !lookup[currentYear][d.id].diabetes || !lookup[currentYear][d.id].income) {
+                    div.text("No Data Available");
+                }
+
+                else {
+                    div.text(`${lookup[currentYear][d.id]['name']} - Diabetes Prevalence: ${lookup[currentYear][d.id]['diabetes']}%, Mean Personal Income: $${lookup[currentYear][d.id]['income']}`)
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY - 30) + "px");
+                }
             })
             .on("mouseout", function() {
                 var sel = d3.select(this);
