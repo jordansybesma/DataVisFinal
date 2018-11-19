@@ -2,13 +2,14 @@
 
 const width            = 900;
 const height           = 500;
-let centered;
 let currentYear        = 2004; // Sets which year we're currently examining
 let diabetesThresholds = []; // Stores quantiles for diabetes
 let incomeThresholds   = []; // Stores quantiles for income
-let lookup = {}
+let lookup = {};
+let centered;
 var plotDiabetes = true;
 var plotIncome = true;
+
 
 // colorMap stores the two-dimensional color matrix.
 // The physical position of the hex in the array matches the
@@ -20,6 +21,22 @@ const colorMap = [
     ['#88bbc8','#7e9eba','#7f7fa0','#7e627c','#734853'],
     ['#64acbe','#698eac','#6e718e','#69576b','#574249'],
 ]
+// Defines the texture that we'll add to the counties with no data
+const texture = textures.lines()
+    .orientation("diagonal")
+    .size(5)
+    .strokeWidth(1)
+    .stroke("lightgray")
+    .background("white");
+
+// Defines the texture for the legend box associated with no data
+// The same as the texture defined above, except that it is scaled to fit the legend box
+const textureForLegend = textures.lines()
+    .orientation("diagonal")
+    .size(10)
+    .strokeWidth(2)
+    .stroke("lightgray")
+    .background("white");
 
 // This particular color scale was inspired by http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
 // and was fleshed out using https://learnui.design/tools/data-color-picker.html#palette
@@ -232,6 +249,29 @@ function render(error, us, data) {
         .attr('text-anchor', 'middle')
         .text('Higher Income')
 
+    // Creates legend for counties with no data
+    key.append("rect")
+        .attr("x", 100)
+        .attr("y", (height / 2) + 150)
+        .attr("width", squareSize)
+        .attr("height", squareSize)
+        .attr("fill", textureForLegend.url())
+
+    // Labels the legend associated with counties with no data
+    key.append("text")
+        .attr('class', 'key')
+        .attr("x", 100 + squareSize + 5)
+        .attr("y", (height / 2) + 170)
+        .attr('text-anchor', 'left')
+        .text('= No Data Available')
+        .style("font-weight", 5)
+
+    // Creates the texture associated with the counties with no data
+    g.call(texture);
+    g.call(textureForLegend);
+
+    // Everything involving populating the map with data happens inside of this update function
+    // It is called at start up and every time that the year is updated
     function update() {
         d3.selection.prototype.moveToFront = function() {
             return this.each(function() {
@@ -257,7 +297,7 @@ function render(error, us, data) {
             .style("fill", function (d) {
                 // If we don't have data for this county, return some default value.
                 if (!lookup[currentYear][d.id] || !lookup[currentYear][d.id].diabetes || !lookup[currentYear][d.id].income) {
-                    return color(0);
+                    return texture.url();
                 }
                 if (!plotDiabetes && plotIncome){
                   return color(0, lookup[currentYear][d.id].income);
@@ -305,6 +345,8 @@ function render(error, us, data) {
             .attr("d", path);
     }
 
+    // This is a zoom feature taken from https://bl.ocks.org/mbostock/2206590
+    // It allows  users to zoom in and out of a specific county (zoom out by clicking on the same county twice in a row)
     function clicked(d) {
         var x, y, k;
 
@@ -331,7 +373,7 @@ function render(error, us, data) {
     }
 
 
-    update() // Call update initially so it can create the initial plot (year 2003)
+    update() // Call update initially so it can create the initial plot (year 2004)
 
 
     // Creates a slider to show each data frame by year, and animate with play button
@@ -346,7 +388,6 @@ function render(error, us, data) {
                 var newYear = date.getFullYear();
                 if (newYear !== currentYear) {
                     currentYear = newYear;
-                    g.selectAll("path").remove();
                     update();
                 }
             })
