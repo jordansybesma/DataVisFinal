@@ -84,11 +84,28 @@ function render(error, us, data) {
     incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6),
         d3.quantile(income, 0.8), d3.quantile(income, 1)];
 
-    //Add checkboxes
+    // Draw Key
+    key.append("text")
+    	.style('font-size', '16px')
+    	.style('font-weight', 'bold')
+        .attr("x", 60)
+        .attr("y", (height / 2) - 190)
+        .attr('text-anchor', 'left')
+        .text('Key')
+
+    // Add checkboxes
+    key.append("text")
+    	.style('font-weight', 'bold')
+        .style('font-size', '13px')
+        .attr("x", 60)
+        .attr("y", (height / 2) - 165)
+        .attr('text-anchor', 'left')
+        .text('Variables:')
+
     key.append("foreignObject")
         .attr("width", 100)
         .attr("height", 10)
-        .attr("x", 50)
+        .attr("x", 60)
         .attr("y", (height / 2)-160)
         .append("xhtml:body")
         .attr("class", "key")
@@ -101,7 +118,7 @@ function render(error, us, data) {
     key.append("foreignObject")
         .attr("width", 100)
         .attr("height", 10)
-        .attr("x", 50)
+        .attr("x", 60)
         .attr("y", (height / 2)-140)
         .append("xhtml:body")
         .html("<form><input type=checkbox id=check checked/>Income</form>")
@@ -111,13 +128,22 @@ function render(error, us, data) {
             update();
         });
 
-    // Draw key
+    // Draw color map
     const squareSize = 30
+
+    key.append("text")
+        .style('font-size', '13px')
+        .style('font-weight', 'bold')
+        .attr("x", 60)
+        .attr("y", (height / 2) - (5 * squareSize / 2) - 18)
+        .attr('text-anchor', 'left')
+        .text('Colors:')
+
     for (let i = 0; i < colorMap.length; i++) {
         for (let j = 0; j < colorMap[i].length; j++) {
             key.append("rect")
                 .attr("x", 100 + squareSize*i)
-                .attr("y", (height / 2) - (5 * squareSize / 2) + squareSize*j)
+                .attr("y", (height / 2) - (5 * squareSize / 2) + squareSize*j + 25)
                 .attr("width", squareSize)
                 .attr("height", squareSize)
                 .attr("fill", colorMap[j][i])
@@ -157,52 +183,52 @@ function render(error, us, data) {
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100)
-        .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
+        .attr("y", (height / 2) - (5 * squareSize / 2) + 5)
         .attr('text-anchor', 'middle')
         .text('Less Diabetes,')
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100)
-        .attr("y", (height / 2) - (5 * squareSize / 2) -5)
+        .attr("y", (height / 2) - (5 * squareSize / 2) + 18)
         .attr('text-anchor', 'middle')
         .text('Lower Income')
 
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
-        .attr("y", (height / 2) - (5 * squareSize / 2) - 15)
+        .attr("y", (height / 2) - (5 * squareSize / 2) + 5)
         .attr('text-anchor', 'middle')
         .text('More Diabetes,')
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
-        .attr("y", (height / 2) - (5 * squareSize / 2) -5)
+        .attr("y", (height / 2) - (5 * squareSize / 2) + 18)
         .attr('text-anchor', 'middle')
         .text('Lower Income')
 
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100)
-        .attr("y", (height / 2) + 2.5 * squareSize + 15)
+        .attr("y", (height / 2) + 2.5 * squareSize + 40)
         .attr('text-anchor', 'middle')
         .text('Less Diabetes,')
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100)
-        .attr("y", (height / 2) + 2.5 * squareSize + 25)
+        .attr("y", (height / 2) + 2.5 * squareSize + 53)
         .attr('text-anchor', 'middle')
         .text('Higher Income')
 
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
-        .attr("y", (height / 2) + 2.5 * squareSize + 15)
+        .attr("y", (height / 2) + 2.5 * squareSize + 40)
         .attr('text-anchor', 'middle')
         .text('More Diabetes,')
     key.append("text")
         .attr('class', 'key')
         .attr("x", 100 + squareSize * 5)
-        .attr("y", (height / 2) + 2.5 * squareSize + 25)
+        .attr("y", (height / 2) + 2.5 * squareSize + 53)
         .attr('text-anchor', 'middle')
         .text('Higher Income')
 
