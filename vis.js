@@ -7,6 +7,8 @@ let currentYear        = 2004; // Sets which year we're currently examining
 let diabetesThresholds = []; // Stores quantiles for diabetes
 let incomeThresholds   = []; // Stores quantiles for income
 let lookup = {}
+var plotDiabetes = true;
+var plotIncome = true;
 
 // colorMap stores the two-dimensional color matrix.
 // The physical position of the hex in the array matches the
@@ -82,6 +84,30 @@ function render(error, us, data) {
     incomeThresholds = [d3.quantile(income, 0), d3.quantile(income, 0.2), d3.quantile(income, 0.4), d3.quantile(income, 0.6),
         d3.quantile(income, 0.8), d3.quantile(income, 1)];
 
+        //Add checkboxes
+        key.append("foreignObject")
+            .attr("width", 100)
+            .attr("height", 100)
+            .attr("x", 100)
+            .attr("y", (height / 2)-200)
+            .append("xhtml:body")
+            .html("<form><input type=checkbox id=check checked/>Diabetes</form>")
+            .on("change", function(d, i){
+                plotDiabetes = !plotDiabetes;
+                update();
+            });
+
+            key.append("foreignObject")
+                .attr("width", 100)
+                .attr("height", 100)
+                .attr("x", 100)
+                .attr("y", (height / 2)-170)
+                .append("xhtml:body")
+                .html("<form><input type=checkbox id=check checked/>Income</form>")
+                .on("change", function(d, i){
+                    plotIncome = !plotIncome;
+                    update();
+                });
     // Draw key
     const squareSize = 30
     for (let i = 0; i < colorMap.length; i++) {
@@ -204,6 +230,12 @@ function render(error, us, data) {
                 if (!lookup[currentYear][d.id] || !lookup[currentYear][d.id].diabetes || !lookup[currentYear][d.id].income) {
                     return color(0);
                 }
+                if (!plotDiabetes && plotIncome){
+                  return color(0, lookup[currentYear][d.id].income);
+                }
+                if (plotDiabetes && !plotIncome){
+                  return color(lookup[currentYear][d.id].diabetes, 0);
+                }
                 return color(lookup[currentYear][d.id].diabetes, lookup[currentYear][d.id].income);
             })
             .style("opacity", 1)
@@ -271,6 +303,7 @@ function render(error, us, data) {
 
 
     update() // Call update initially so it can create the initial plot (year 2003)
+
 
     // Creates a slider to show each data frame by year, and animate with play button
     d3.select("#slider")
