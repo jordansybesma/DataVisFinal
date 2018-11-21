@@ -5,8 +5,6 @@ Fall 2018
 Our visualization displays diabetes prevalence per county, income per county, how these two variables are related to each other,
 and how they change over time (between 2004 and 2013).
 
-### Visualization example
-
 ![ScreenShot](DiabetesAndIncomeStaticExample.JPG)
 
 ### Running the visualization
