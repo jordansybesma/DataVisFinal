@@ -5,6 +5,10 @@ Fall 2018
 Our visualization displays diabetes prevalence per county, income per county, how these two variables are related to each other,
 and how they change over time (between 2004 and 2013).
 
+### Visualization example
+
+![ScreenShot](DiabetesAndIncomeStaticExample.jpg)
+
 ### Running the visualization
 In order to run this visualization, you may first have to install Node.js if it is not already installed on your
 computer. Then run "npm install" to install our dependencies. It may still be necessary to run "npm install textures"
@@ -57,3 +61,4 @@ Each row in the dataset represents an individual county in a specific year.
 * http://rmaps.github.io/blog/posts/animated-choropleths/
 * http://www.joshuastevens.net/cartography/make-a-bivariate-choropleth-map/
 * https://bl.ocks.org/mbostock/2206590
+
