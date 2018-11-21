@@ -7,7 +7,7 @@ and how they change over time (between 2004 and 2013).
 
 ### Visualization example
 
-![ScreenShot](DiabetesAndIncomeStaticExample.jpg)
+![ScreenShot](DiabetesAndIncomeStaticExample.JPG)
 
 ### Running the visualization
 In order to run this visualization, you may first have to install Node.js if it is not already installed on your
