@@ -1,5 +1,5 @@
 ## Datavis Final
-Sonia Moreno, Jordan Sybesma, Thomas Scruggs
+Sonia Moreno, Mara Sybesma, Thomas Scruggs
 Fall 2018
 
 Our dynamic visualization displays diabetes prevalence per county, income per county, how these two variables are related to each other,
